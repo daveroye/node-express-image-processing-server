@@ -1,6 +1,8 @@
+const path = require("path");
 const {Router, request, response} = require("express");
 const multer = require("multer");
 
+const photoPath = path.resolve(__dirname, "../../client/photo-viewer.html")
 const storage = multer.diskStorage(
     {
         destination: 'api/uploads/',
@@ -19,6 +21,10 @@ router.post('/upload', upload.single('photo'), (request, response) => {
     } else {
         response.status(201).json({success: true});
     }
+});
+
+router.get('/photo-viewer', (request, response) => {
+    response.sendFile(photoPath);
 });
     
 function filename(request, file, callback) {
