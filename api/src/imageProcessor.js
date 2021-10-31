@@ -25,6 +25,14 @@ function imageProcessor(filename) {
                         destination: resizedDestination
                     }
                 });
+
+                const monochromeWorker = new Worker(pathToMonochromeWorker, {
+                    workerData: {
+                        source: sourcePath,
+                        destination: monochromeDestination
+                    }
+                });
+
                 resizeWorker
                     .on('message', (message) => {
                         resizeWorkerFinished = true;
@@ -40,12 +48,7 @@ function imageProcessor(filename) {
                             reject(new Error(`Exited with status code ${code}`));
                         }
                     });
-                const monochromeWorker = new Worker(pathToMonochromeWorker, {
-                    workerData: {
-                        source: sourcePath,
-                        destination: monochromeDestination
-                    }
-                });
+
                 monochromeWorker
                     .on('message', (message) => {
                         monochromeWorkerFinished = true;
@@ -62,6 +65,7 @@ function imageProcessor(filename) {
                         }
 
                     });
+                    
             } catch (error) {
                 reject(error);
             }
